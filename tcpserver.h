@@ -2,7 +2,8 @@
 #define TCPSERVER_H
 
 #include <QTcpServer>
-#include "tcpsocketthread.h"
+#include <QThread>
+#include "tcpsocket.h"
 
 class TcpServer : public QTcpServer
 {
@@ -11,11 +12,13 @@ public:
     explicit TcpServer(QObject *parent = nullptr);
     ~TcpServer();
 signals:
-    void peerStringUpdated(QVector<QString>);
+
+private slots:
+    void discardSocket();
+
 private:
-    QVector<QPair<QString, TcpSocketThread*>> connection_list;
-    QSet<TcpSocketThread*> connection_set;
-    QVector<QString> peerString;
+    QVector<QPair<QString, TcpSocket*>> connection_list;
+    QThread th;
 protected:
     void incomingConnection(qintptr socketDescriptor);
 };

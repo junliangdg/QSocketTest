@@ -19,8 +19,8 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        tcpsocketthread.h tcpsocketthread.cpp
         tcpserver.h tcpserver.cpp
+        tcpsocket.h tcpsocket.cpp
         ${TS_FILES}
 )
 
