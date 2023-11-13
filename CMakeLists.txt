@@ -9,8 +9,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Network)
 
 set(TS_FILES QSocketTest_zh_CN.ts)
 
@@ -19,6 +19,8 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        tcpsocketthread.h tcpsocketthread.cpp
+        tcpserver.h tcpserver.cpp
         ${TS_FILES}
 )
 
@@ -49,7 +51,9 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-target_link_libraries(QSocketTest PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(QSocketTest PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Network)
 
 set_target_properties(QSocketTest PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
