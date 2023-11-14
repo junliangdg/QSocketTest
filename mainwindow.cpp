@@ -19,8 +19,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    emit closeTcpServer();
-
     delete ui;
 }
 
@@ -43,9 +41,17 @@ void MainWindow:: updateTcpServerState(TcpServer::ServerState state)
     {
         switch (state) {
         case TcpServer::ServerState::Closed:
+            ui->comboBox_protocolType->setEnabled(true);
+            ui->spinBox_port->setEnabled(true);
+            ui->lineEdit_ipAddress->setEnabled(true);
+            ui->pushButton_send->setEnabled(false);
             ui->pushButton_connect->setText(tr("Listen"));
             break;
         case TcpServer::ServerState::Listening:
+            ui->comboBox_protocolType->setEnabled(false);
+            ui->spinBox_port->setEnabled(false);
+            ui->lineEdit_ipAddress->setEnabled(false);
+            ui->pushButton_send->setEnabled(true);
             ui->pushButton_connect->setText(tr("Close"));
             break;
         default:

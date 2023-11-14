@@ -8,6 +8,7 @@ TcpServer::TcpServer(QObject *parent)
 {
     moveToThread(&th);
     th.start();
+    connect(&th, &QThread::finished, this, &TcpServer::closeServer);
 }
 
 TcpServer::~TcpServer()
