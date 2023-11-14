@@ -11,6 +11,8 @@ public:
     explicit TcpSocket(qintptr socketDescriptor, QObject *parent = nullptr);
     ~TcpSocket();
     QString getPeerString();
+public slots:
+    void writeSocket(QString peerString, QByteArray data);
 signals:
     void dataRead(QByteArray);
 private slots:

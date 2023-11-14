@@ -23,6 +23,14 @@ QString TcpSocket::getPeerString()
     return address + ":" + port;
 }
 
+void TcpSocket::writeSocket(QString peerString, QByteArray data)
+{
+    if (peerString == getPeerString())
+    {
+        write(data);
+    }
+}
+
 void TcpSocket::readSocket()
 {
     // get the information
@@ -30,5 +38,6 @@ void TcpSocket::readSocket()
 
     emit dataRead(data);
 
-    qDebug() << socketDescriptor() << " Data in: " << data;
+    qDebug() << getPeerString() << " Data in: " << data;
+
 }
