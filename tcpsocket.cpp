@@ -23,12 +23,9 @@ QString TcpSocket::getPeerString()
     return address + ":" + port;
 }
 
-void TcpSocket::writeSocket(QString peerString, QByteArray data)
+void TcpSocket::writeSocket(QByteArray data)
 {
-    if (peerString == getPeerString())
-    {
-        write(data);
-    }
+    write(data);
 }
 
 void TcpSocket::readSocket()

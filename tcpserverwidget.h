@@ -20,11 +20,21 @@ signals:
     void listenTcpServer(QHostAddress, quint16);
     void closeTcpServer();
 private slots:
+    void appendReceivedData(QString client, QByteArray data);
     void updateConnectionList(QVector<QString> list);
     void updateServerState(TcpServer::ServerState state);
     void on_actionPushButton_clicked();
 
+    void on_clearConversationPushButton_clicked();
+
+    void on_clearSendPushButton_clicked();
+
+    void on_clientListComboBox_activated(int index);
+
+    void on_sendPushButton_clicked();
+
 private:
+    QString curConnection;
     QVector<QString> connectionList;
     TcpServer tcpServer;
     TcpServer::ServerState serverState;

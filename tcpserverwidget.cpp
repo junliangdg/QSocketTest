@@ -1,4 +1,5 @@
 #include "tcpserverwidget.h"
+#include "qtimer.h"
 #include "ui_tcpserverwidget.h"
 
 TcpServerWidget::TcpServerWidget(QWidget *parent) :
@@ -12,6 +13,8 @@ TcpServerWidget::TcpServerWidget(QWidget *parent) :
     connect(this, &TcpServerWidget::closeTcpServer, &tcpServer, &TcpServer::closeServer);
     connect(&tcpServer, &TcpServer::peerListUpdated, this, &TcpServerWidget::updateConnectionList);
     connect(&tcpServer, &TcpServer::serverStateChanged, this, &TcpServerWidget::updateServerState);
+
+    connect(&tcpServer, &TcpServer::dataRead, this, &TcpServerWidget::appendReceivedData);
 }
 
 TcpServerWidget::~TcpServerWidget()
@@ -19,8 +22,17 @@ TcpServerWidget::~TcpServerWidget()
     delete ui;
 }
 
+void TcpServerWidget::appendReceivedData(QString client, QByteArray data)
+{
+    ui->conversationTextEdit->append(client + "\n" + data);
+}
+
 void TcpServerWidget::updateConnectionList(QVector<QString> list)
 {
+    if (list.size())
+        ui->disconnectPushButton->setEnabled(true);
+    else
+        ui->disconnectPushButton->setEnabled(false);
     connectionList = list;
     ui->clientListComboBox->clear();
 
@@ -29,6 +41,13 @@ void TcpServerWidget::updateConnectionList(QVector<QString> list)
     {
         ui->clientListComboBox->addItem(connection);
     }
+
+    int index = ui->clientListComboBox->findText(curConnection);
+    qDebug() << index;
+    if (index == -1)
+        ui->clientListComboBox->setCurrentIndex(0);
+    else
+        ui->clientListComboBox->setCurrentIndex(index);
 }
 
 void TcpServerWidget:: updateServerState(TcpServer::ServerState state)
@@ -62,5 +81,32 @@ void TcpServerWidget::on_actionPushButton_clicked()
         emit listenTcpServer(address, port);
     else if (serverState == TcpServer::ServerState::Listening)
         emit closeTcpServer();
+}
+
+
+void TcpServerWidget::on_clearConversationPushButton_clicked()
+{
+    ui->conversationTextEdit->clear();
+}
+
+
+void TcpServerWidget::on_clearSendPushButton_clicked()
+{
+    ui->sendTextEdit->clear();
+}
+
+
+void TcpServerWidget::on_clientListComboBox_activated(int index)
+{
+    curConnection = ui->clientListComboBox->currentText();
+}
+
+
+void TcpServerWidget::on_sendPushButton_clicked()
+{
+    QString data = ui->sendTextEdit->toPlainText();
+    qDebug() << data.toLocal8Bit();
+    //QTimer::singleShot(0, &tcpServer, [=](){tcpServer.writeData(curConnection , data.toLocal8Bit());});
+    tcpServer.writeData(curConnection , data.toLocal8Bit());
 }
 

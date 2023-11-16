@@ -40,6 +40,21 @@ void TcpServer::closeServer()
     emit serverStateChanged(ServerState::Closed);
 }
 
+void TcpServer::writeData(QString peerString, QByteArray data)
+{
+    QVector<QPair<QString, TcpSocket*>>::iterator it =
+            std::find_if(connection_list.begin(), connection_list.end(),
+                         [peerString](const QPair<QString, TcpSocket*>& p){
+        return p.first == peerString;});
+
+    qDebug() << it->first;
+    if (it != connection_list.end()){
+        QTimer::singleShot(0, it->second, [=](){it->second->writeSocket(data);});
+    }
+
+}
+
+
 void TcpServer::discardSocket()
 {
     TcpSocket* socket = reinterpret_cast<TcpSocket*>(sender());
@@ -81,7 +96,7 @@ void TcpServer::incomingConnection(qintptr socketDescriptor)
 
     connect(socket, &TcpSocket::disconnected, this, &TcpServer::discardSocket);
     connect(socket, &TcpSocket::dataRead, this, &TcpServer::readSocket);
-    connect(this, &TcpServer::writeData, socket, &TcpSocket::writeSocket);
+    connect(this, &TcpServer::writeSocket, socket, &TcpSocket::writeSocket);
 
     connection_list.append(QPair<QString, TcpSocket*>(socket->getPeerString(), socket));
     qDebug() << getPeerList();

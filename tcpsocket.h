@@ -12,7 +12,7 @@ public:
     ~TcpSocket();
     QString getPeerString();
 public slots:
-    void writeSocket(QString peerString, QByteArray data);
+    void writeSocket(QByteArray data);
 signals:
     void dataRead(QByteArray);
 private slots:
