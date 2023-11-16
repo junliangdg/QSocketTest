@@ -16,13 +16,13 @@ public:
     };
     explicit TcpServer(QObject *parent = nullptr);
     ~TcpServer();
+    void writeData(QString peerString, QByteArray data);
 public slots:
     void listenServer(QHostAddress address, quint16 port);
     void closeServer();
-    void writeData(QString peerString, QByteArray data);
+    void disconnectClient(QString peer);
 signals:
     void peerListUpdated(QVector<QString>);
-    void writeSocket(QByteArray);
     void dataRead(QString, QByteArray);
     void serverStateChanged(ServerState);
 private slots:

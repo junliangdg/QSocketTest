@@ -7,7 +7,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
 }
 
 MainWindow::~MainWindow()
@@ -19,7 +18,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionTcpServer_triggered()
 {
+    static unsigned int tcpServerWidgetNo = 1;
     TcpServerWidget *widget = new TcpServerWidget;
+    widget->setWindowTitle(widget->windowTitle() + QString::number(tcpServerWidgetNo++));
     QMdiSubWindow *subWindow = new QMdiSubWindow;
     subWindow->setWidget(widget);
     subWindow->setAttribute(Qt::WA_DeleteOnClose);

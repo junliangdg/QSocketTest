@@ -33,7 +33,12 @@ private slots:
 
     void on_sendPushButton_clicked();
 
+    void on_disconnectPushButton_clicked();
+
+    void on_pausePushButton_clicked();
+
 private:
+    bool paused;
     QString curConnection;
     QVector<QString> connectionList;
     TcpServer tcpServer;

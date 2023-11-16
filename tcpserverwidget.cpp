@@ -5,7 +5,8 @@
 TcpServerWidget::TcpServerWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TcpServerWidget),
-    serverState(TcpServer::ServerState::Closed)
+    serverState(TcpServer::ServerState::Closed),
+    paused(false)
 {
     ui->setupUi(this);
 
@@ -59,12 +60,14 @@ void TcpServerWidget:: updateServerState(TcpServer::ServerState state)
         ui->portSpinBox->setEnabled(true);
         ui->ipAddressLineEdit->setEnabled(true);
         ui->sendPushButton->setEnabled(false);
+        ui->pausePushButton->setEnabled(false);
         ui->actionPushButton->setText(tr("Start"));
         break;
     case TcpServer::ServerState::Listening:
         ui->portSpinBox->setEnabled(false);
         ui->ipAddressLineEdit->setEnabled(false);
         ui->sendPushButton->setEnabled(true);
+        ui->pausePushButton->setEnabled(true);
         ui->actionPushButton->setText(tr("Stop"));
         break;
     default:
@@ -104,9 +107,48 @@ void TcpServerWidget::on_clientListComboBox_activated(int index)
 
 void TcpServerWidget::on_sendPushButton_clicked()
 {
-    QString data = ui->sendTextEdit->toPlainText();
-    qDebug() << data.toLocal8Bit();
-    //QTimer::singleShot(0, &tcpServer, [=](){tcpServer.writeData(curConnection , data.toLocal8Bit());});
-    tcpServer.writeData(curConnection , data.toLocal8Bit());
+    QByteArray data = ui->sendTextEdit->toPlainText().toLocal8Bit();
+    if(ui->clientListComboBox->currentIndex() == 0)
+    {
+        for (auto &client : connectionList)
+        {
+            tcpServer.writeData(client , data);
+        }
+    }
+    else
+        tcpServer.writeData(curConnection , data);
+
+}
+
+
+void TcpServerWidget::on_disconnectPushButton_clicked()
+{
+    if(ui->clientListComboBox->currentIndex() == 0)
+    {
+        for (auto &client : connectionList)
+        {
+            tcpServer.disconnectClient(client);
+        }
+    }
+    else
+        tcpServer.disconnectClient(curConnection);
+}
+
+
+void TcpServerWidget::on_pausePushButton_clicked()
+{
+    if(paused)
+    {
+        QTimer::singleShot(0, &tcpServer, [&]{tcpServer.resumeAccepting();});
+        ui->pausePushButton->setText(tr("Pause"));
+        paused = false;
+    }
+    else
+    {
+        QTimer::singleShot(0, &tcpServer, [&]{tcpServer.pauseAccepting();});
+        ui->pausePushButton->setText(tr("Resume"));
+        paused = true;
+    }
+
 }
 
