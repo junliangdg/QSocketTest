@@ -22,6 +22,7 @@ set(PROJECT_SOURCES
         tcpserver.h tcpserver.cpp
         tcpsocket.h tcpsocket.cpp
         tcpserverwidget.h tcpserverwidget.cpp tcpserverwidget.ui
+        tcpclientwidget.h tcpclientwidget.cpp tcpclientwidget.ui
         ${TS_FILES}
 )
 

@@ -34,6 +34,7 @@
      <string>New</string>
     </property>
     <addaction name="actionTcpServer"/>
+    <addaction name="actionTcpClient"/>
    </widget>
    <addaction name="menuNew"/>
   </widget>
@@ -52,6 +53,11 @@
   <action name="actionTcpServer">
    <property name="text">
     <string>TcpServer</string>
+   </property>
+  </action>
+  <action name="actionTcpClient">
+   <property name="text">
+    <string>TcpClient</string>
    </property>
   </action>
  </widget>

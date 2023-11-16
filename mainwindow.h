@@ -18,6 +18,8 @@ public:
 private slots:
     void on_actionTcpServer_triggered();
 
+    void on_actionTcpClient_triggered();
+
 private:
     Ui::MainWindow *ui;
 };
