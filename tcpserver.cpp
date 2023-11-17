@@ -1,6 +1,7 @@
 #include "tcpserver.h"
 #include "qapplication.h"
 #include "qtimer.h"
+#include "tcpsocket.h"
 #include <functional>
 
 TcpServer::TcpServer(QObject *parent)
@@ -24,7 +25,7 @@ void TcpServer::listenServer(QHostAddress address, quint16 port)
     if (ret)
         emit serverStateChanged(ServerState::Listening);
     else
-        emit serverStateChanged(ServerState::Closed);
+        emit errorOccurred(errorString());
 }
 
 void TcpServer::closeServer()
@@ -48,9 +49,7 @@ void TcpServer::disconnectClient(QString peer)
         return p.first == peer;});
 
     if (it != connection_list.end()){
-        QTimer::singleShot(0, this, [=](){
-            delete it->second;
-            connection_list.erase(it);});
+        QTimer::singleShot(0, it->second, [=]{it->second->disconnectFromHost();});
     }
 }
 
@@ -64,7 +63,6 @@ void TcpServer::writeData(QString peerString, QByteArray data)
     if (it != connection_list.end()){
         QTimer::singleShot(0, it->second, [=](){it->second->writeSocket(data);});
     }
-
 }
 
 
@@ -78,11 +76,13 @@ void TcpServer::discardSocket()
     });
 
     if (it != connection_list.end()){
+        emit clientDisconnected(it->first);
         qDebug() << QString("INFO :: %1 has just disconnected").arg(it->first);
         connection_list.erase(it);
         delete socket;
     }
     emit peerListUpdated(getPeerList());
+
 }
 
 void TcpServer::readSocket(QByteArray data)
@@ -113,4 +113,5 @@ void TcpServer::incomingConnection(qintptr socketDescriptor)
     connection_list.append(QPair<QString, TcpSocket*>(socket->getPeerString(), socket));
     qDebug() << getPeerList();
     emit peerListUpdated(getPeerList());
+    emit clientConnected(socket->getPeerString());
 }

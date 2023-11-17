@@ -16,13 +16,14 @@ public:
     explicit TcpServerWidget(QWidget *parent = nullptr);
     ~TcpServerWidget();
 
-signals:
-    void listenTcpServer(QHostAddress, quint16);
-    void closeTcpServer();
 private slots:
     void appendReceivedData(QString client, QByteArray data);
     void updateConnectionList(QVector<QString> list);
     void updateServerState(TcpServer::ServerState state);
+    void newClientConnectedIn(QString client);
+    void clientDisconnected(QString client);
+    void serverErrorHandler(QString error);
+
     void on_actionPushButton_clicked();
 
     void on_clearConversationPushButton_clicked();
@@ -35,6 +36,7 @@ private slots:
 
     void on_disconnectPushButton_clicked();
 
+    // pause or resume accepting new connections
     void on_pausePushButton_clicked();
 
 private:

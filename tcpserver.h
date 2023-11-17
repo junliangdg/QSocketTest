@@ -22,6 +22,9 @@ public slots:
     void closeServer();
     void disconnectClient(QString peer);
 signals:
+    void errorOccurred(QString);
+    void clientConnected(QString);
+    void clientDisconnected(QString);
     void peerListUpdated(QVector<QString>);
     void dataRead(QString, QByteArray);
     void serverStateChanged(ServerState);

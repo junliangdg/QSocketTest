@@ -21,6 +21,8 @@ set(PROJECT_SOURCES
         mainwindow.ui
         tcpserver.h tcpserver.cpp
         tcpsocket.h tcpsocket.cpp
+        tcpclient.h tcpclient.cpp
+        utils.h utils.cpp
         tcpserverwidget.h tcpserverwidget.cpp tcpserverwidget.ui
         tcpclientwidget.h tcpclientwidget.cpp tcpclientwidget.ui
         ${TS_FILES}
