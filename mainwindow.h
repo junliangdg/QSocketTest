@@ -20,6 +20,9 @@ private slots:
 
     void on_actionTcpClient_triggered();
 
+
+    void on_actionUdpPeer_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

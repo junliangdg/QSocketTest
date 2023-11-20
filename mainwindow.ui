@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>989</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuNew">
@@ -35,6 +35,7 @@
     </property>
     <addaction name="actionTcpServer"/>
     <addaction name="actionTcpClient"/>
+    <addaction name="actionUdpPeer"/>
    </widget>
    <addaction name="menuNew"/>
   </widget>
@@ -52,12 +53,17 @@
   </widget>
   <action name="actionTcpServer">
    <property name="text">
-    <string>TcpServer</string>
+    <string>TCP Server</string>
    </property>
   </action>
   <action name="actionTcpClient">
    <property name="text">
-    <string>TcpClient</string>
+    <string>TCP Client</string>
+   </property>
+  </action>
+  <action name="actionUdpPeer">
+   <property name="text">
+    <string>UDP Peer</string>
    </property>
   </action>
  </widget>
